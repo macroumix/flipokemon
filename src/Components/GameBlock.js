@@ -8,80 +8,71 @@ import classes from "./GameBlock.module.css";
 const pokemonsArray = shufflePokemons();
 
 const GameBlock = () => {
-
-  console.log("pokemons array: ",pokemonsArray)
+  console.log("pokemons array: ", pokemonsArray);
 
   const [clicked, setClicked] = useState(pokemonsArray);
-  const [guessed, setGuessed] = useState([]);
-
-/*   useEffect(() => {
-    setClicked(() => (
-      pokemonsArray.map(elem => (
-        {...elem, clicked: true}
-      ))
-    ))
-
-  }, []) */
-  
+  const [counter, setCounter] = useState(0);
 
   const userGuessHandler = (id) => {
-    setClicked(() => 
-      clicked.map(elem => {
+    setClicked((prev) =>
+      prev.map((elem) => {
         if (id === elem.id) {
           return { ...elem, clicked: true };
-        } return elem;
+        }
+        return elem;
       })
-    )
-    
-  }
-  console.log("clicked is: ", clicked)
-
-/*   useEffect(() => {
-    setCheckArray(() => 
-      boardObject.filter((elem) => elem.clicked === true),
     );
-  }, [boardObject]);
+  };
 
   useEffect(() => {
-    setIsFocused(() => {
-      return checkArray.length === 2;
-    });
-  }, [checkArray]); */
+    if (clicked.filter((elem) => elem.clicked === true).length === 2) {
+      const checkArray = clicked.filter((elem) => elem.clicked === true);
 
-/*   useEffect(() => {
-    const checkAnswer = (firstObject, secondObject) => {
-      if (checkArray.length > 0) {
-        if (firstObject.image === secondObject.image) {
-          console.log("we got a match");
-          setBoardObject((prev) =>
-            prev.map((elem) => {
-              if (firstObject.id === elem.id || secondObject.id === elem.id) {
-                return { ...elem,clicked: false, guessed: true };
-              }
-              return elem;
-            })
-          );
-        }
+      // first and second guess to check
+      const firstPokemonId = checkArray[0].id;
+      const secondPokemonId = checkArray[1].id;
+
+      if (checkArray[0].type === checkArray[1].type) {
+        console.log("you guessed correctly");
+        setClicked((prev) =>
+          prev.map((elem) => {
+            if (firstPokemonId === elem.id || secondPokemonId === elem.id) {
+              return { ...elem, clicked: false, guessed: true };
+            }
+            return { ...elem, clicked: false};
+          })
+        );
       } else {
-        console.log("fuck");
+        setTimeout(() => {
+          setClicked((prev) => prev.map((elem) => {
+            if (firstPokemonId === elem.id || secondPokemonId === elem.id) {
+              return { ...elem, clicked: false};
+            }
+            return { ...elem, clicked: false};
+          }));
+        }, 750);
       }
-    };
-
-    if (isFocused) {
-      checkAnswer(checkArray[0], checkArray[1]);
     }
-  }, [isFocused]);
+  }, [clicked]);
 
-  console.log(boardObject); */
-
-  // create a function to determine the output image
-
+  console.log("clicked is: ", clicked);
 
   // create a constant to later insert it into the return statement
 
-  const toRender = pokemonsArray.map((elem) => (
+  const toRender = clicked.map((elem) => (
     <li key={Math.random()} onClick={() => userGuessHandler(elem.id)}>
-        <img src={pokeball} className={classes.pokeball} alt="pokeball" />
+      {(() => {
+        if (elem.guessed) {
+          console.log("1");
+          return <div className={classes.whitespace}>CORRECT</div>;
+        } else if (elem.clicked) {
+          console.log("2");
+          return <img className={classes.image} src={elem.image} />;
+        }
+        return (
+          <img src={pokeball} className={classes.pokeball} alt="pokeball" />
+        );
+      })()}
     </li>
   ));
 
@@ -89,6 +80,7 @@ const GameBlock = () => {
     <>
       <div>
         <ul className={classes.block}>{toRender}</ul>
+        <div>{counter}</div>
       </div>
     </>
   );
