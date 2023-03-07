@@ -1,0 +1,19 @@
+.block{
+    height: 50px;
+    display: grid;
+    grid-template-columns: 5fr 5fr 5fr;
+    margin: 15px;
+    list-style: none;
+}
+
+.pokeball{
+    height: 50px;
+}
+
+.image{
+    height: 50px;
+}
+
+.whitespace{
+    background-color: white;
+}
