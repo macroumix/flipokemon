@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "animate.css";
 
 import { shufflePokemons } from "../utils/utils";
 
@@ -7,11 +8,10 @@ import classes from "./GameBlock.module.css";
 
 const pokemonsArray = shufflePokemons();
 
-const GameBlock = () => {
+const GameBlock = (props) => {
   console.log("pokemons array: ", pokemonsArray);
 
   const [clicked, setClicked] = useState(pokemonsArray);
-  const [counter, setCounter] = useState(0);
 
   const userGuessHandler = (id) => {
     setClicked((prev) =>
@@ -34,24 +34,31 @@ const GameBlock = () => {
 
       if (checkArray[0].type === checkArray[1].type) {
         console.log("you guessed correctly");
-        setClicked((prev) =>
+        setTimeout(() => {
+          setClicked((prev) =>
           prev.map((elem) => {
             if (firstPokemonId === elem.id || secondPokemonId === elem.id) {
               return { ...elem, clicked: false, guessed: true };
             }
-            return { ...elem, clicked: false};
+            return { ...elem, clicked: false };
           })
         );
+        }, 750);
       } else {
         setTimeout(() => {
-          setClicked((prev) => prev.map((elem) => {
-            if (firstPokemonId === elem.id || secondPokemonId === elem.id) {
-              return { ...elem, clicked: false};
-            }
-            return { ...elem, clicked: false};
-          }));
+          setClicked((prev) =>
+            prev.map((elem) => {
+              if (firstPokemonId === elem.id || secondPokemonId === elem.id) {
+                return { ...elem, clicked: false, animate: true };
+              }
+              return { ...elem, clicked: false };
+            })
+          );
         }, 750);
       }
+    }
+    if (clicked.filter((elem) => elem.guessed === true).length === pokemonsArray.length){
+      props.setIsGameWon(true)
     }
   }, [clicked]);
 
@@ -59,28 +66,51 @@ const GameBlock = () => {
 
   // create a constant to later insert it into the return statement
 
-  const toRender = clicked.map((elem) => (
-    <li key={Math.random()} onClick={() => userGuessHandler(elem.id)}>
-      {(() => {
-        if (elem.guessed) {
-          console.log("1");
-          return <div className={classes.whitespace}>CORRECT</div>;
-        } else if (elem.clicked) {
-          console.log("2");
-          return <img className={classes.image} src={elem.image} />;
-        }
-        return (
-          <img src={pokeball} className={classes.pokeball} alt="pokeball" />
-        );
-      })()}
-    </li>
-  ));
-
   return (
     <>
       <div>
-        <ul className={classes.block}>{toRender}</ul>
-        <div>{counter}</div>
+        <ul className={classes.block}>
+          {clicked.map((elem) => (
+            <li
+              className={classes.gamesquare}
+              key={Math.random()}
+              onClick={() => userGuessHandler(elem.id)}
+            >
+              {(() => {
+                if (elem.guessed) {
+                  console.log("1");
+                  console.log("1,2",elem.animate);
+                  return (
+                    <img
+                      className={elem.animate ? `${classes.image} animate__animated animate__flipInX` : classes.image  }
+                      src={elem.image}
+                    />
+                  );
+                } else if (elem.clicked) {
+                  console.log("2");
+                  console.log("2,2",elem.animate);
+                  return (
+                    <>
+                    <img
+                      className={elem.animate ? `${classes.image} animate__animated animate__flipInX` : classes.image  }
+                      src={elem.image}
+                    />
+                    {elem.animate = false}
+                    </>
+                    
+                  );
+                }
+                return (
+                  <img
+                    src={pokeball}
+                    className={classes.pokeball}
+                    alt="pokeball"
+                  />
+                );
+              })()}
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );

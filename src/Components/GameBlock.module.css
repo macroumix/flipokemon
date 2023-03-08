@@ -1,5 +1,5 @@
 .block{
-    height: 50px;
+    height: 65px;
     display: grid;
     grid-template-columns: 5fr 5fr 5fr;
     margin: 15px;
@@ -7,13 +7,19 @@
 }
 
 .pokeball{
-    height: 50px;
+    height: 65px;
 }
 
 .image{
-    height: 50px;
+    height: 65px;
+    width: 65px;
 }
 
 .whitespace{
     background-color: white;
+}
+
+.gamesquare{
+    height: 75px;
+    width: 75px;
 }
