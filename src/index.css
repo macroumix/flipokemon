@@ -11,9 +11,4 @@ html {
 
 #root {
   /* background-color: white; */
-  border: 1px groove #CBA277ff;
-  background-color: rgba(0,0,0,0.5);
-  border-radius: 25px;
-  width: 350px;
-  height: 620px;
 }

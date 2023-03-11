@@ -77,8 +77,8 @@ const pokeBase = [
     },
   ];
 
-  export function shufflePokemons() {
-    const pokeArray  = [...pokeBase, ...pokeBase];
+  export function shufflePokemons(boardSize) {
+    const pokeArray  = [...pokeBase.slice(0,boardSize/2), ...pokeBase.slice(0,boardSize/2)];
     const array = pokeArray.map(elem=> {
       return {...elem, id: Math.random(), clicked: false, guessed: false, animate: true}
     })
